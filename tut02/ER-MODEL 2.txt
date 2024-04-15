@@ -1,1 +1,1 @@
-Paste your model jpg here 
+ER_diagram_IR managment
