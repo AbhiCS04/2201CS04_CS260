@@ -1,0 +1,41 @@
+version: "3.8"  # Adjust if necessary
+
+services:
+  # Database service
+  database:
+    image: mysql:latest
+    restart: unless-stopped  # Restart container if it exits unexpectedly
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234  #Replace with a strong password
+      MYSQL_DATABASE: login  # Your database name
+
+  
+  # phpMyAdmin service (for database management)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: 127.0.0.1  
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"  # Map phpMyAdmin port to host port (default 80)
+
+
+  # Backend service
+  backend:
+    build: ./backend   # Path to your backend directory containing Dockerfile
+    ports:
+      - "8081:8081"  # Map container port 8081 to host port 8081 (adjust as needed)
+    depends_on:
+      - database  # Ensure backend starts after database is ready
+
+  # Frontend service
+  frontend:
+    build: ./frontend  # Path to your frontend directory containing Dockerfile
+    ports:
+      - "3000:3000"  # Map container port 3000 to host port 3000 (adjust as needed)
+    depends_on:
+      - backend  # Ensure frontend starts after backend is ready
+
+volumes:
+  # Optional volume to persist database data (adjust volume name as needed)
+  database_data: {}
